@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<faces-config version="2.2"
+              xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd">
+    <managed-bean>
+        <managed-bean-name>pagosMBean</managed-bean-name>
+        <managed-bean-class>com.udea.controller.PagosMBean</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
+    <navigation-rule>
+        <from-view-id>/FormularioTransaccion.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>CREATED</from-outcome>
+            <to-view-id>/DetallesTransaccion.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>/DetallesTransaccion.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>BACK</from-outcome>
+            <to-view-id>/FormularioTransaccion.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+</faces-config>

@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        Hello from Facelets
+        
+        
+        <f:view>
+
+
+            <h:form>
+                <h1><h:outputText value="Create/Edit"/></h1>
+                <p:panelGrid columns="2">
+                   
+                    <p:outputLabel value="TsNumTarjeta:" for="tsNumTarjeta" />
+                    <p:inputText id="tsNumTarjeta" value="#{pagoMBean.transaccion.tsNumTarjeta}" title="TsNumTarjeta" required="true" requiredMessage="The TsNumTarjeta field is required."/>
+                    <p:outputLabel value="TsNombreTitula:" for="tsNombreTitula" />
+                    <p:inputText id="tsNombreTitula" value="#{pagoMBean.transaccion.tsNombreTitula}" title="TsNombreTitula" required="true" requiredMessage="The TsNombreTitula field is required."/>
+                    <p:outputLabel value="TsMonto:" for="tsMonto" />
+                    <p:inputText id="tsMonto" value="#{pagoMBean.transaccion.tsMonto}" title="TsMonto" required="true" requiredMessage="The TsMonto field is required."/>
+                    <p:outputLabel value="MaFranquiciasFqId:" for="maFranquiciasFqId" />
+                    <p:selectOneMenu id="maFranquiciasFqId" value="#{pagoMBean.transaccion.maFranquiciasFqId}" required="true" requiredMessage="The MaFranquiciasFqId field is required.">
+                        <!-- TODO: update below reference to list of available items-->
+                        <f:selectItems value="#{fixme}"/>
+                    </p:selectOneMenu>
+        
+                </p:panelGrid>
+            </h:form>
+        </f:view>
+
+    </h:body>
+</html>
+
