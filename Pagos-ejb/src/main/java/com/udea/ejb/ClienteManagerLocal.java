@@ -15,7 +15,8 @@ import javax.ejb.Local;
 @Local
 public interface ClienteManagerLocal {
 
-    TsCliente getClienteById(int clienteId);
+    TsCliente getClienteById(String clienteId);
 
     void createCliente(TsCliente cliente);
+
 }

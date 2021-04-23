@@ -1,1 +1,14 @@
+com\udea\ejb\FranquiciasManagerLocal.class
+com\udea\persistence\MaFranquicias_.class
+com\udea\ejb\ClienteManager.class
 com\udea\NewSessionBean.class
+com\udea\persistence\TsCliente.class
+com\udea\ejb\ClienteManagerLocal.class
+com\udea\ejb\FranquiciasManager.class
+com\udea\persistence\TsCliente_.class
+com\udea\ejb\TransaccionManagerLocal.class
+com\udea\persistence\TsTransaccion_.class
+com\udea\persistence\MaFranquicias.class
+com\udea\persistence\TsTransaccion.class
+.netbeans_automatic_build
+com\udea\ejb\TransaccionManager.class

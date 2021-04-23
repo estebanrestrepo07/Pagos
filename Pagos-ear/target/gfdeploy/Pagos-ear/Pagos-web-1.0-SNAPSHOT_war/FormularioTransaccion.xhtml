@@ -5,34 +5,41 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui">
     <h:head>
-        <title>Facelet Title</title>
+        <title>Pasarela Pagos</title>
+        <script src="https://www.google.com/recaptcha/api.js"></script>
     </h:head>
     <h:body>
-        Hello from Facelets
         
-        
-        <f:view>
-
-
-            <h:form>
-                <h1><h:outputText value="Create/Edit"/></h1>
-                <p:panelGrid columns="2">
-                   
-                    <p:outputLabel value="TsNumTarjeta:" for="tsNumTarjeta" />
-                    <p:inputText id="tsNumTarjeta" value="#{pagoMBean.transaccion.tsNumTarjeta}" title="TsNumTarjeta" required="true" requiredMessage="The TsNumTarjeta field is required."/>
-                    <p:outputLabel value="TsNombreTitula:" for="tsNombreTitula" />
-                    <p:inputText id="tsNombreTitula" value="#{pagoMBean.transaccion.tsNombreTitula}" title="TsNombreTitula" required="true" requiredMessage="The TsNombreTitula field is required."/>
-                    <p:outputLabel value="TsMonto:" for="tsMonto" />
-                    <p:inputText id="tsMonto" value="#{pagoMBean.transaccion.tsMonto}" title="TsMonto" required="true" requiredMessage="The TsMonto field is required."/>
-                    <p:outputLabel value="MaFranquiciasFqId:" for="maFranquiciasFqId" />
-                    <p:selectOneMenu id="maFranquiciasFqId" value="#{pagoMBean.transaccion.maFranquiciasFqId}" required="true" requiredMessage="The MaFranquiciasFqId field is required.">
-                        <!-- TODO: update below reference to list of available items-->
-                        <f:selectItems value="#{fixme}"/>
-                    </p:selectOneMenu>
-        
-                </p:panelGrid>
-            </h:form>
-        </f:view>
+     <h:form id="form">
+        <h:panelGrid columns="2" cellpadding="7" styleClass="p-mb-3">
+           
+             <h:outputLabel for="nombreCliente" value="Nombre Cliente:" />
+            <p:inputText id="nombreCliente" value="#{pagosMBean.nombreCliente}" required="true"/>
+            
+             <h:outputLabel for="cedulaCliente" value="Cedula Cliente:" />
+            <p:inputText id="cedulaCliente" value="#{pagosMBean.cedulaCliente}" required="true"/>
+            
+             <h:outputLabel for="email" value="Email:" />
+            <p:inputText id="email" value="#{pagosMBean.email}" required="true"/>
+            
+             <h:outputLabel for="numTarjeta" value="Numero Tarjeta:" />
+            <p:inputNumber id="numTarjeta" value="#{pagosMBean.numTarjeta}" maxValue="9999999999999999" decimalPlaces="0" required="true"/>
+            
+            <h:outputLabel for="cvv" value="cvv:" />
+            <p:inputNumber id="cvv" value="#{pagosMBean.cvv}" maxValue="999" decimalPlaces="0" required="true"/>
+            
+            <h:outputLabel for="tipoTarjeta" value="Tipo Tarjeta" />
+            <p:inputText id="tipoTarjeta" value="#{pagosMBean.tipoTarjeta}" readonly="true"/>
+            
+            <h:outputLabel for="cantidad" value="cantidad" />
+            <p:inputNumber id="cantidad" value="#{pagosMBean.cantidad}" required="true" symbol=" COP" decimalSeparator="," thousandSeparator="." symbolPosition="s" decimalPlaces="2"/>
+        </h:panelGrid>
+         
+                  
+         <!--<p:captcha id="captcha"></p:captcha>-->
+         
+         <p:commandButton value="Button1" id="btn1" action="#{pagosMBean.guardarPago()}" ajax="false" styleClass="p-mr-2"/>
+    </h:form>
 
     </h:body>
 </html>

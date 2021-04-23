@@ -32,7 +32,6 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "TsCliente.findAll", query = "SELECT t FROM TsCliente t")
     , @NamedQuery(name = "TsCliente.findByCtId", query = "SELECT t FROM TsCliente t WHERE t.ctId = :ctId")
-    , @NamedQuery(name = "TsCliente.findByCtNumeroid", query = "SELECT t FROM TsCliente t WHERE t.ctNumeroid = :ctNumeroid")
     , @NamedQuery(name = "TsCliente.findByCtNombre", query = "SELECT t FROM TsCliente t WHERE t.ctNombre = :ctNombre")
     , @NamedQuery(name = "TsCliente.findByCtEmail", query = "SELECT t FROM TsCliente t WHERE t.ctEmail = :ctEmail")
     , @NamedQuery(name = "TsCliente.findByCtCelular", query = "SELECT t FROM TsCliente t WHERE t.ctCelular = :ctCelular")})
@@ -42,11 +41,9 @@ public class TsCliente implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
+    @Size(max = 11)
     @Column(name = "ct_id")
-    private Integer ctId;
-    @Size(max = 45)
-    @Column(name = "ct_numeroid")
-    private String ctNumeroid;
+    private String ctId;
     @Size(max = 45)
     @Column(name = "ct_nombre")
     private String ctNombre;
@@ -62,24 +59,16 @@ public class TsCliente implements Serializable {
     public TsCliente() {
     }
 
-    public TsCliente(Integer ctId) {
+    public TsCliente(String ctId) {
         this.ctId = ctId;
     }
 
-    public Integer getCtId() {
+    public String getCtId() {
         return ctId;
     }
 
-    public void setCtId(Integer ctId) {
+    public void setCtId(String ctId) {
         this.ctId = ctId;
-    }
-
-    public String getCtNumeroid() {
-        return ctNumeroid;
-    }
-
-    public void setCtNumeroid(String ctNumeroid) {
-        this.ctNumeroid = ctNumeroid;
     }
 
     public String getCtNombre() {

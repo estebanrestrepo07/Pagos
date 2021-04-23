@@ -110,11 +110,11 @@ public class TsTransaccion implements Serializable {
         this.tsNumTarjeta = tsNumTarjeta;
     }
 
-    public String getTsNombreTitula() {
+    public String getTsNombreTitular() {
         return tsNombreTitula;
     }
 
-    public void setTsNombreTitula(String tsNombreTitula) {
+    public void setTsNombreTitular(String tsNombreTitula) {
         this.tsNombreTitula = tsNombreTitula;
     }
 
@@ -142,8 +142,8 @@ public class TsTransaccion implements Serializable {
         this.maFranquiciasFqId = maFranquiciasFqId;
     }
     
-    public String getCliente(){return this.tsCliente.getCtNumeroid();}
-    public void seCliente(int clienteId){this.tsCliente=new TsCliente(clienteId);}
+    public String getCliente(){return this.tsCliente.getCtId();}
+    public void setCliente(String clienteId){this.tsCliente=new TsCliente(clienteId);}
     
     public String getFranquicia(){return this.maFranquiciasFqId.getFqNombre();}
     public void setFranquicia(int franquiciaId){this.maFranquiciasFqId=new MaFranquicias(franquiciaId);}

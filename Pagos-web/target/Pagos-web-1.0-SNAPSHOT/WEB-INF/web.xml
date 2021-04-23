@@ -21,4 +21,16 @@
     <welcome-file-list>
         <welcome-file>faces/FormularioTransaccion.xhtml</welcome-file>
     </welcome-file-list>
+    
+    
+    <context-param>
+        <param-name>primefaces.PRIVATE_CAPTCHA_KEY</param-name>
+        <param-value>6Lcj1LUaAAAAALsayFhVmOH8ATqIWy1GnB-yCGOc</param-value>
+    </context-param>
+    <context-param>
+        <param-name>primefaces.PUBLIC_CAPTCHA_KEY</param-name>
+        <param-value>6Lcj1LUaAAAAAJ1TBZaSe5yVHaFFu822w1zv0EoM</param-value>
+    </context-param>
+    
+    
 </web-app>

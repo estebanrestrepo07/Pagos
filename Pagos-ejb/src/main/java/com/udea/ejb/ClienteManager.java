@@ -26,7 +26,7 @@ public class ClienteManager implements ClienteManagerLocal {
     // "Insert Code > Add Business Method")
 
     @Override
-    public TsCliente getClienteById(int clienteId) {
+    public TsCliente getClienteById(String clienteId) {
         Query query = em.createNamedQuery("TsCliente.findByCtId").setParameter("ctId", clienteId);
         return (TsCliente) query.getSingleResult();
     }
@@ -34,8 +34,6 @@ public class ClienteManager implements ClienteManagerLocal {
     @Override
     public void createCliente(TsCliente cliente) {
         em.persist(cliente);
-    }
-
-    
+    }    
     
 }
