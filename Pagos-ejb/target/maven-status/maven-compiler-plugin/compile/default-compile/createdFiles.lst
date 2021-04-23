@@ -10,5 +10,4 @@ com\udea\ejb\TransaccionManagerLocal.class
 com\udea\persistence\TsTransaccion_.class
 com\udea\persistence\MaFranquicias.class
 com\udea\persistence\TsTransaccion.class
-.netbeans_automatic_build
 com\udea\ejb\TransaccionManager.class

@@ -126,48 +126,26 @@ public class PagosMBean implements Serializable {
     public String guardarPago() {
         
         try{
-            //ver si el usuario ya existe, si no existe, crear uno nuevo, si ya existe, hacer las transaccion
-            
-            TsCliente existCliente = this.clienteManager.getClienteById(cedulaCliente);
-            
-            //aqui como el usuario no existe, envia una excepcion, verificar que si entre al catch o revisar el catch desde el cliente manager!!!! 
+            TsCliente actualCliente = new TsCliente();
+            actualCliente.setCtId(cedulaCliente);
+            actualCliente.setCtNombre(nombreCliente);
+            actualCliente.setCtEmail(email);
+            System.out.println(actualCliente.getCtId());
+            cliente = this.clienteManager.crearCliente(actualCliente);
             
         }catch(Exception eC){
             clienteError = true;
-           
-            
-            //aaqui se llena los datos del cliente para posterior crearlo en caso de no existir
-            
-//            this.clienteManager.getClienteById(cedulaCliente);
-//            TsCliente actualCliente = new TsCliente();
-//            actualCliente.setCtId(cedulaCliente);
-//            actualCliente.setCtNombre(nombreCliente);
-//            actualCliente.setCtEmail(email);
-//            actualCliente.setCtCelular("123");
-//            this.clienteManager.createCliente(actualCliente);
             
         } finally {
-//            if(clienteError == false){
-//                try{
-//                    aqui se llena los datos de la transaccion para posterior crearla en caso de haber creado o haber obtenido el cliente! 
-
-//                    TsTransaccion actualTransaccion = new TsTransaccion();
-//                    actualTransaccion.setTsNumTarjeta(numTarjeta);
-//                    actualTransaccion.setTsNombreTitular(nombreCliente);//o nombre Titular
-//                    actualTransaccion.setFranquicia(1);
-//                    actualTransaccion.setTsCliente(cliente);
-//                    actualTransaccion.setTsMonto(cantidad);
-////                    this.transaccionManager.createTransaccion(actualTransaccion);
-//                }catch(Exception eT){
-//                    transaccionError = true;
-//                }
-//                finally{
-//////                    if(transaccionError == false){
-//////                         //remove cliente creado
-//////                    }
-////                
-//                }
-//            }
+            if(cliente == null || clienteError == true){
+                TsTransaccion actualTransaccion = new TsTransaccion();
+                actualTransaccion.setTsNumTarjeta(numTarjeta);
+                actualTransaccion.setTsNombreTitular(nombreCliente);//o nombre Titular
+//                actualTransaccion.setMaFranquiciasFqId();
+                actualTransaccion.setTsClienteCtId(cliente);
+                actualTransaccion.setTsMonto(cantidad);
+                this.transaccionManager.createTransaccion(actualTransaccion);
+            }
         } 
         return "CREATED";
     }

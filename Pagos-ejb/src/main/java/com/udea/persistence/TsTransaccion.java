@@ -36,7 +36,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "TsTransaccion.findByTsId", query = "SELECT t FROM TsTransaccion t WHERE t.tsId = :tsId")
     , @NamedQuery(name = "TsTransaccion.findByTsFecha", query = "SELECT t FROM TsTransaccion t WHERE t.tsFecha = :tsFecha")
     , @NamedQuery(name = "TsTransaccion.findByTsNumTarjeta", query = "SELECT t FROM TsTransaccion t WHERE t.tsNumTarjeta = :tsNumTarjeta")
-    , @NamedQuery(name = "TsTransaccion.findByTsNombreTitula", query = "SELECT t FROM TsTransaccion t WHERE t.tsNombreTitula = :tsNombreTitula")
+    , @NamedQuery(name = "TsTransaccion.findByTsNombreTitular", query = "SELECT t FROM TsTransaccion t WHERE t.tsNombreTitula = :tsNombreTitula")
     , @NamedQuery(name = "TsTransaccion.findByTsMonto", query = "SELECT t FROM TsTransaccion t WHERE t.tsMonto = :tsMonto")})
 public class TsTransaccion implements Serializable {
 
@@ -64,12 +64,12 @@ public class TsTransaccion implements Serializable {
     @NotNull
     @Column(name = "ts_monto")
     private double tsMonto;
-    @JoinColumn(name = "ts_cliente", referencedColumnName = "ct_id")
-    @ManyToOne(optional = false)
-    private TsCliente tsCliente;
     @JoinColumn(name = "ma_franquicias_fq_id", referencedColumnName = "fq_id")
     @ManyToOne(optional = false)
     private MaFranquicias maFranquiciasFqId;
+    @JoinColumn(name = "ts_cliente_ct_id", referencedColumnName = "ct_id")
+    @ManyToOne(optional = false)
+    private TsCliente tsClienteCtId;
 
     public TsTransaccion() {
     }
@@ -126,14 +126,6 @@ public class TsTransaccion implements Serializable {
         this.tsMonto = tsMonto;
     }
 
-    public TsCliente getTsCliente() {
-        return tsCliente;
-    }
-
-    public void setTsCliente(TsCliente tsCliente) {
-        this.tsCliente = tsCliente;
-    }
-
     public MaFranquicias getMaFranquiciasFqId() {
         return maFranquiciasFqId;
     }
@@ -141,12 +133,14 @@ public class TsTransaccion implements Serializable {
     public void setMaFranquiciasFqId(MaFranquicias maFranquiciasFqId) {
         this.maFranquiciasFqId = maFranquiciasFqId;
     }
-    
-    public String getCliente(){return this.tsCliente.getCtId();}
-    public void setCliente(String clienteId){this.tsCliente=new TsCliente(clienteId);}
-    
-    public String getFranquicia(){return this.maFranquiciasFqId.getFqNombre();}
-    public void setFranquicia(int franquiciaId){this.maFranquiciasFqId=new MaFranquicias(franquiciaId);}
+
+    public TsCliente getTsClienteCtId() {
+        return tsClienteCtId;
+    }
+
+    public void setTsClienteCtId(TsCliente tsClienteCtId) {
+        this.tsClienteCtId = tsClienteCtId;
+    }
 
     @Override
     public int hashCode() {
@@ -171,6 +165,10 @@ public class TsTransaccion implements Serializable {
     @Override
     public String toString() {
         return "com.udea.persistence.TsTransaccion[ tsId=" + tsId + " ]";
+    }
+
+    public void setTsCliente(TsCliente cliente) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

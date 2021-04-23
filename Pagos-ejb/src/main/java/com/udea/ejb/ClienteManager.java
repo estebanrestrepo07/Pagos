@@ -32,8 +32,15 @@ public class ClienteManager implements ClienteManagerLocal {
     }
 
     @Override
-    public void createCliente(TsCliente cliente) {
+    public TsCliente crearCliente(TsCliente cliente) {
+            
+        TsCliente u = em.find(TsCliente.class,cliente.getCtId());
+        if(u!=null)
+        {
+            return u;
+        }
         em.persist(cliente);
+        return u;
     }    
     
 }

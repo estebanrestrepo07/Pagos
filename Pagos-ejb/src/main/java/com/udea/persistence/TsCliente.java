@@ -11,13 +11,12 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -33,27 +32,27 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "TsCliente.findAll", query = "SELECT t FROM TsCliente t")
     , @NamedQuery(name = "TsCliente.findByCtId", query = "SELECT t FROM TsCliente t WHERE t.ctId = :ctId")
     , @NamedQuery(name = "TsCliente.findByCtNombre", query = "SELECT t FROM TsCliente t WHERE t.ctNombre = :ctNombre")
-    , @NamedQuery(name = "TsCliente.findByCtEmail", query = "SELECT t FROM TsCliente t WHERE t.ctEmail = :ctEmail")
-    , @NamedQuery(name = "TsCliente.findByCtCelular", query = "SELECT t FROM TsCliente t WHERE t.ctCelular = :ctCelular")})
+    , @NamedQuery(name = "TsCliente.findByCtEmail", query = "SELECT t FROM TsCliente t WHERE t.ctEmail = :ctEmail")})
 public class TsCliente implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Size(max = 11)
+    @NotNull
+    @Size(min = 1, max = 11)
     @Column(name = "ct_id")
     private String ctId;
-    @Size(max = 45)
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 45)
     @Column(name = "ct_nombre")
     private String ctNombre;
-    @Size(max = 45)
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 45)
     @Column(name = "ct_email")
     private String ctEmail;
-    @Size(max = 45)
-    @Column(name = "ct_celular")
-    private String ctCelular;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tsCliente")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tsClienteCtId")
     private Collection<TsTransaccion> tsTransaccionCollection;
 
     public TsCliente() {
@@ -61,6 +60,12 @@ public class TsCliente implements Serializable {
 
     public TsCliente(String ctId) {
         this.ctId = ctId;
+    }
+
+    public TsCliente(String ctId, String ctNombre, String ctEmail) {
+        this.ctId = ctId;
+        this.ctNombre = ctNombre;
+        this.ctEmail = ctEmail;
     }
 
     public String getCtId() {
@@ -85,14 +90,6 @@ public class TsCliente implements Serializable {
 
     public void setCtEmail(String ctEmail) {
         this.ctEmail = ctEmail;
-    }
-
-    public String getCtCelular() {
-        return ctCelular;
-    }
-
-    public void setCtCelular(String ctCelular) {
-        this.ctCelular = ctCelular;
     }
 
     @XmlTransient

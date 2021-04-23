@@ -17,6 +17,6 @@ public interface ClienteManagerLocal {
 
     TsCliente getClienteById(String clienteId);
 
-    void createCliente(TsCliente cliente);
+    TsCliente crearCliente(TsCliente cliente);
 
 }
