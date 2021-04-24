@@ -47,8 +47,7 @@ public class TsTransaccion implements Serializable {
     @Column(name = "ts_id")
     private Integer tsId;
     @Basic(optional = false)
-    @NotNull
-    @Column(name = "ts_fecha")
+    @Column(name = "ts_fecha", nullable=false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date tsFecha;
     @Basic(optional = false)

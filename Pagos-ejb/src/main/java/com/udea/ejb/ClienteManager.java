@@ -40,7 +40,7 @@ public class ClienteManager implements ClienteManagerLocal {
             return u;
         }
         em.persist(cliente);
-        return u;
+        return cliente;
     }    
     
 }

@@ -18,5 +18,7 @@ public interface TransaccionManagerLocal {
     TsTransaccion getTransaccion(int tsTransaccionId);
 
     void createTransaccion(TsTransaccion transaccion);
+
+    TsTransaccion updateTransaccion(TsTransaccion transaccion);
     
 }

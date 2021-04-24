@@ -20,27 +20,36 @@
             <p:inputText id="cedulaCliente" value="#{pagosMBean.cedulaCliente}" required="true"/>
             
              <h:outputLabel for="email" value="Email:" />
-            <p:inputText id="email" value="#{pagosMBean.email}" required="true"/>
+            <p:inputText id="email" value="#{pagosMBean.email}" required="true" validatorMessage="Email is invalid.">
+                <f:validateRegex pattern="^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}" />
+            </p:inputText>
             
              <h:outputLabel for="numTarjeta" value="Numero Tarjeta:" />
-            <p:inputNumber id="numTarjeta" value="#{pagosMBean.numTarjeta}" maxValue="9999999999999999" decimalPlaces="0" required="true"/>
+             <p:inputMask id="numTarjeta" value="#{pagosMBean.numTarjeta}" mask="9999-9999-9999-9999" required="true" >
+                 <p:ajax event="keyup" update="tipoTarjeta" listener="#{pagosMBean.validarNumTarjeta}" process="@this" global="false"></p:ajax>
+             </p:inputMask>
+             
+            <p:outputLabel for="fechaVen" value="Fecha Ven:"/>
+            <p:inputMask id="fechaVen" value="#{pagosMBean.fechaVen}" mask="99/9999" required="true" >
+                 <p:ajax event="keyup" listener="#{pagosMBean.validarFecha}" process="@this" global="false"></p:ajax>
+             </p:inputMask>
             
             <h:outputLabel for="cvv" value="cvv:" />
-            <p:inputNumber id="cvv" value="#{pagosMBean.cvv}" maxValue="999" decimalPlaces="0" required="true"/>
+            <p:inputNumber id="cvv" value="#{pagosMBean.cvv}" maxValue="999" decimalPlaces="0" required="true"  size="3" >
+                 <p:ajax event="keyup" update="tipoTarjeta" listener="#{pagosMBean.validarCVV}" process="@this" global="false"></p:ajax>
+            </p:inputNumber>
             
             <h:outputLabel for="tipoTarjeta" value="Tipo Tarjeta" />
-            <p:inputText id="tipoTarjeta" value="#{pagosMBean.tipoTarjeta}" readonly="true"/>
+            <h:outputText id="tipoTarjeta" value="#{pagosMBean.tipoTarjeta}"/>
             
             <h:outputLabel for="cantidad" value="cantidad" />
-            <p:inputNumber id="cantidad" value="#{pagosMBean.cantidad}" required="true" symbol=" COP" decimalSeparator="," thousandSeparator="." symbolPosition="s" decimalPlaces="2"/>
+            <p:inputNumber id="cantidad" value="#{pagosMBean.cantidad}" required="true" maxValue="10000" symbol=" COP" decimalSeparator="," thousandSeparator="." symbolPosition="s" decimalPlaces="0"/>
         </h:panelGrid>
          
                   
-         <!--<p:captcha id="captcha"></p:captcha>-->
-         <p:messages id="messages" showDetail="true" closable="true">
-                
-            </p:messages>
-         <p:commandButton value="Button1" id="btn1" action="#{pagosMBean.guardarPago()}" ajax="false" styleClass="p-mr-2"/>
+         <!--<p:captcha id="captcha"></p:captcha>--> <!-- Comentado debido a problemas con certificados de seguridad-->
+         <p:messages id="messages" showDetail="true" closable="true"></p:messages>
+         <p:commandButton value="Pagar" id="btn1" action="#{pagosMBean.guardarPago()}" ajax="false" styleClass="p-mr-2"/>
          
     </h:form>
 

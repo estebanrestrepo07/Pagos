@@ -11,28 +11,41 @@ import com.udea.persistence.MaFranquicias;
 import com.udea.persistence.TsCliente;
 import com.udea.persistence.TsTransaccion;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
+import javax.faces.component.UIComponent;
+import javax.faces.component.UIInput;
+import javax.faces.component.UIViewRoot;
+import javax.faces.component.visit.VisitCallback;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ValueChangeEvent;
 
 /**
  *
  * @author Esteban
  */
 public class PagosMBean implements Serializable {
+
     private String nombreCliente;
     private String cedulaCliente;
     private String email;
-    private long numTarjeta;
-    private short cvv;
+    private String numTarjeta;
+    private String fechaVen;
+    private String cvv;
     private String tipoTarjeta;
-    private double cantidad;
-    
+    private double cantidad = 500;
+
     private boolean clienteError = false;
     private boolean transaccionError = false;
-    
+    private boolean tipoValido = false;
+    private boolean cvvError = false;
+    private boolean fechaError = false;
+
     @EJB
     private FranquiciasManagerLocal franquiciasManager;
 
@@ -53,13 +66,24 @@ public class PagosMBean implements Serializable {
     public PagosMBean() {
     }
 
+    //retorna una lista de franquicias para mostrar en un validaciones de JSF
+    public List<MaFranquicias> getFranquicias(){
+        if((franquicias==null)||(franquicias.isEmpty()))
+            refresh();
+            return franquicias;
+    }
+    
     public TsCliente getCliente() {
         return clienteManager.getClienteById(cliente.getCtId());
     }
-    
-    public String getTransaction() {
-        return transaccion.getTsNombreTitular();
-    }   
+
+    public TsTransaccion getTransaccion() {
+        return transaccion;
+    }
+
+    public MaFranquicias getFranquicia() {
+        return franquiciasManager.getFranquicias().get(0);
+    }
     //////////////////////////
 
     public String getNombreCliente() {
@@ -86,22 +110,31 @@ public class PagosMBean implements Serializable {
         this.email = email;
     }
 
-    public long getNumTarjeta() {
+    public String getNumTarjeta() {
         return numTarjeta;
     }
 
-    public void setNumTarjeta(long numTarjeta) {
+    public void setNumTarjeta(String numTarjeta) {
         this.numTarjeta = numTarjeta;
     }
 
-    public short getCvv() {
+    public String getCvv() {
         return cvv;
     }
 
-    public void setCvv(short cvv) {
+    public void setCvv(String cvv) {
         this.cvv = cvv;
     }
 
+    public String getFechaVen() {
+        return fechaVen;
+    }
+
+    public void setFechaVen(String fechaVen) {
+        this.fechaVen = fechaVen;
+    }
+
+    
     public String getTipoTarjeta() {
         return tipoTarjeta;
     }
@@ -117,41 +150,155 @@ public class PagosMBean implements Serializable {
     public void setCantidad(double cantidad) {
         this.cantidad = cantidad;
     }
-    
-    
-    
-    /////////////////////////
 
+    private void refresh() {
+        franquicias = franquiciasManager.getFranquicias();
+    }
+
+/////////////////////////
     //Action handler - llamado cuando guarda un pago
     public String guardarPago() {
+        if(!tipoValido){
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "tarjeta no valida"));
+            tipoTarjeta = "";
+            return null;
+        }
         
-        try{
+        if(cvvError){
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "CVV no valido"));
+            cvv = "";
+            return null;
+        }
+        
+        if(fechaError){
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Fecha Vencimiento no valida"));
+            fechaVen = "";
+            return null;
+        }
+        
+        List<MaFranquicias> franquicias = null;
+        clienteError = false;
+        try {
+            franquicias = franquiciasManager.getFranquicias();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        try {
             TsCliente actualCliente = new TsCliente();
             actualCliente.setCtId(cedulaCliente);
             actualCliente.setCtNombre(nombreCliente);
             actualCliente.setCtEmail(email);
-            System.out.println(actualCliente.getCtId());
             cliente = this.clienteManager.crearCliente(actualCliente);
-            
-        }catch(Exception eC){
+        } catch (Exception eC) {
             clienteError = true;
-            
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Falló al crear el cliente."));
         } finally {
-            if(cliente == null || clienteError == true){
-                TsTransaccion actualTransaccion = new TsTransaccion();
-                actualTransaccion.setTsNumTarjeta(numTarjeta);
-                actualTransaccion.setTsNombreTitular(nombreCliente);//o nombre Titular
-//                actualTransaccion.setMaFranquiciasFqId();
-                actualTransaccion.setTsClienteCtId(cliente);
-                actualTransaccion.setTsMonto(cantidad);
-                this.transaccionManager.createTransaccion(actualTransaccion);
+            if (clienteError == false) {
+                try {
+                    TsTransaccion actualTransaccion = new TsTransaccion();
+                    actualTransaccion.setTsNumTarjeta(Long.parseLong(numTarjeta.replace("-", "")));
+                    actualTransaccion.setTsNombreTitular(nombreCliente);//o nombre Titular
+                    actualTransaccion.setMaFranquiciasFqId(franquicias.get(0));
+                    actualTransaccion.setTsClienteCtId(cliente);
+                    actualTransaccion.setTsMonto(cantidad);
+                    this.transaccionManager.createTransaccion(actualTransaccion);
+                    transaccion = this.transaccionManager.updateTransaccion(actualTransaccion);
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Listo!", "Transacción exitosa."));
+                    return "CREATED";
+                } catch (Exception e) {
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Falló la transacción."));
+                }
             }
-        } 
-        return "CREATED";
+        }
+        return null;
     }
 //    
     //Action handler - llamado cuando guarda un pago
+
     public String volverPagInicial() {
+        nombreCliente = "";
+        cedulaCliente = "";
+        email = "";
+        numTarjeta = "";
+        cvv = "";
+        tipoTarjeta = "";
+        cantidad = 500;
         return "BACK";
     }
+
+    //Validador de CVV
+    public void validarCVV() {
+        cvvError = false;
+        System.out.print(cvv);
+        if(cvv.length() < 3){
+          cvvError = true;
+        }
+    }
+    
+    //validador de fecha
+    public void validarFecha(){
+        fechaError = false;
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat formatter = new SimpleDateFormat("MM-yyyy");
+        String[] fechaActual = formatter.format(calendar.getTime()).toString().split("-");
+        String mesFechaActual = fechaActual[0];
+        String anioFechaActual = fechaActual[1];
+        if(fechaVen !=null ){
+            String[] fechaVenForm = fechaVen.replace("_", "").split("/");
+            
+            if(fechaVenForm.length==2){
+               String mesFechaVen = fechaVenForm[0];
+               String anioFechaVen = fechaVenForm[1];
+               
+               
+               if(Integer.parseInt(anioFechaActual) > Integer.parseInt(anioFechaVen)){
+                   fechaError = true;
+               }else{
+                    if(Integer.parseInt(mesFechaActual) > Integer.parseInt(mesFechaVen) || (Integer.parseInt(mesFechaVen) > 13 || Integer.parseInt(mesFechaVen) <= 0)){
+                        fechaError = true;
+                    
+                    }
+                   
+               }
+            }else{
+                fechaError = true;
+            }
+            
+        }   
+        
+        
+        
+       
+          
+
+    }
+
+    //Validador de numTarjeta
+    public void validarNumTarjeta() {
+        tipoValido = false;
+        Iterator<MaFranquicias> iterator = getFranquicias().iterator();
+        while (iterator.hasNext() && iterator != null) {
+            MaFranquicias franquicia = iterator.next();
+            long rangoSup = franquicia.getFqRangoSu();
+            long rangoInf = franquicia.getFqRangoInf();
+            String numTarjetaString = numTarjeta.replace("-", "").replace("_", "");
+            if(numTarjetaString.length()<16){
+                tipoTarjeta = "";
+                continue;
+            }
+            long tarjetaActual = Long.parseLong(numTarjetaString.isEmpty() ? "0": numTarjetaString);
+            if(rangoInf <= tarjetaActual &&  tarjetaActual <= rangoSup){
+                tipoValido = true;
+                tipoTarjeta = franquicia.getFqNombre();
+                break;
+            }
+        }
+        
+        if(tipoValido==false){
+            tipoTarjeta = "";
+        }
+    }
+    
+
 }

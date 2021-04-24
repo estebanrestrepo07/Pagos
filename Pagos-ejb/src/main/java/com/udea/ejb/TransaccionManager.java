@@ -34,6 +34,11 @@ public class TransaccionManager implements TransaccionManagerLocal {
     public void createTransaccion(TsTransaccion transaccion) {
         em.persist(transaccion);
     }
+
+    @Override
+    public TsTransaccion updateTransaccion(TsTransaccion transaccion) {
+        return em.merge(transaccion);
+    }
     
     
     
